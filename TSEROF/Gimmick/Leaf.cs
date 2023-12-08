@@ -66,6 +66,7 @@ public class Leaf : MonoBehaviour
         }
         
         _playerIsOnRide = true;
+        _playerTransform = _player.transform;
         _playerTransform.position = transform.position;
         _playerTransform.rotation = transform.rotation;
         _player.movementSpeed *= 1.7f;
