@@ -1,18 +1,23 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 public class LaserPatternManager : MonoBehaviour
 {
-    private readonly int[,] _randomPair = new int[6, 2] { { 3, 10 }, { 0, 5 }, { 2, 7 }, { 4, 9 }, { 6, 11 }, { 1, 8 } };
-    private int[] _selectedLaser = new int[6];
-    private Transform[] _laserTransform = new Transform[6];
-    public GameObject Stage2ClearCutScene;
+    private const int LaserCount = 6;
+    private const int LaserPairs = 2;
+    
+    private readonly int[,] _randomPair = new int[LaserCount, LaserPairs] { { 3, 10 }, { 0, 5 }, { 2, 7 }, { 4, 9 }, { 6, 11 }, { 1, 8 } };
+    private int[] _selectedLaser = new int[LaserCount];
+    private Transform[] _laserTransform = new Transform[LaserCount];
+    public GameObject stage2ClearCutScene;
     public int successCount;
-    private bool _isClear;
+    private bool _isCleared;
+    private readonly Random _random = new Random();
 
     private void Update()
     {
-        if (_isClear)
+        if (_isCleared)
         {
             return;
         }
@@ -25,7 +30,7 @@ public class LaserPatternManager : MonoBehaviour
 
     private void Start()
     {
-        Stage2ClearCutScene.SetActive(false);
+        stage2ClearCutScene.SetActive(false);
         GetLaserPair();
         RandomSelect();
         LaserPatternSetting();
@@ -42,10 +47,9 @@ public class LaserPatternManager : MonoBehaviour
 
     private void RandomSelect()
     {
-        Random rand = new Random();
         for (int i = 0; i < 6; i++)
         {
-            _selectedLaser[i] = _randomPair[i, rand.Next(2)];
+            _selectedLaser[i] = _randomPair[i, _random.Next(LaserPairs)];
         }
     }
     
@@ -65,8 +69,7 @@ public class LaserPatternManager : MonoBehaviour
         {
             _laserTransform[i].gameObject.SetActive(false);
         }
-        Stage2ClearCutScene.SetActive(true);
-        _isClear = true;
+        stage2ClearCutScene.SetActive(true);
+        _isCleared = true;
     }
-
 }

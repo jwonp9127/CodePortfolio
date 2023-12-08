@@ -2,16 +2,15 @@ using UnityEngine;
 
 public class LaserReceiver : MonoBehaviour
 {
-    public Transform receivedLaser;
+    public Transform ReceivedLaser{ get; private set; }
     private Renderer _renderer;
     private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
-    private Color _color = Color.cyan;
-    // public float _startTime = -1;
-    // private float successTime = 5;
+    private readonly Color _color = Color.cyan;
 
     private void Awake()
     {
         _renderer = transform.GetComponent<Renderer>();
+        ReceivedLaser = null;
     }
 
     private void Start()
@@ -21,7 +20,7 @@ public class LaserReceiver : MonoBehaviour
 
     public void Activate(Transform receivedTransform, out float startTime)
     {
-        receivedLaser = receivedTransform;
+        ReceivedLaser = receivedTransform;
 
         if (!IsCorrect())
         {
@@ -41,6 +40,6 @@ public class LaserReceiver : MonoBehaviour
 
     private bool IsCorrect()
     {
-        return receivedLaser.parent == transform.parent;
+        return ReceivedLaser.parent == transform.parent;
     }
 }

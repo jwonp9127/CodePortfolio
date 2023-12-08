@@ -3,57 +3,73 @@ using UnityEngine.InputSystem;
 
 public class Leaf : MonoBehaviour
 {
-    [SerializeField] private Player player;
-    [SerializeField] private bool isOnRide;
-    [SerializeField] private GameObject iconObject;
+    private Player _player;
+    private bool _playerIsOnRide;
+    private GameObject _interactionIcon;
+    private Transform _playerTransform;
+    
+    private void Awake()
+    {
+        _interactionIcon = transform.GetChild(2).gameObject;
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
-        iconObject.SetActive(true);
-        if (isOnRide)
+        _interactionIcon.SetActive(true);
+        if (_playerIsOnRide)
         {
             return;
         }
         
-        player = other.GetComponent<Player>();
+        _player = other.GetComponent<Player>();
         
-        if (player == null)
+        if (_player == null)
         {
             return;
         }
         
-        player.Input.PlayerActions.Interaction.started += CheckOnRideStarted;
+        _player.Input.PlayerActions.Interaction.started += CheckOnRideStarted;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        iconObject.SetActive(false);
-        if (isOnRide)
+        _interactionIcon.SetActive(false);
+        if (_playerIsOnRide)
         {
             return;
         }
         
-        player = other.GetComponent<Player>();
+        _player = other.GetComponent<Player>();
         
-        if (player == null)
+        if (_player == null)
         {
             return;
         }
         
-        player.Input.PlayerActions.Interaction.started -= CheckOnRideStarted;
+        _player.Input.PlayerActions.Interaction.started -= CheckOnRideStarted;
     }
     
     private void CheckOnRideStarted(InputAction.CallbackContext obj)
     {
-        if (isOnRide)
+        if (_playerIsOnRide)
         {
             return;
         }
-
-        isOnRide = true;
-        player.transform.position = transform.position;
-        player.transform.rotation = transform.rotation;
-        player.movementSpeed *= 1.7f;
+        SetPlayerOnRide();
+    }
+    
+    private void SetPlayerOnRide()
+    {
+        if (_playerTransform == null)
+        {
+            return;
+        }
+        
+        _playerIsOnRide = true;
+        _playerTransform.position = transform.position;
+        _playerTransform.rotation = transform.rotation;
+        _player.movementSpeed *= 1.7f;
         Stage2Manager.instance.isStage2Clear = true;
-        transform.SetParent(player.transform);
+        transform.SetParent(_playerTransform);
     }
 }

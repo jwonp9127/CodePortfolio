@@ -61,11 +61,11 @@ public class LaserTransmitter : MonoBehaviour
     private void ShootLaser()
     {
         Ray ray = new Ray(transform.position + transform.right, transform.right);
-
-        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, LayerMask.GetMask("ReceiverSensor")))
+        RaycastHit[] hits = new RaycastHit[1];
+        if (Physics.RaycastNonAlloc(ray, hits, maxDistance, LayerMask.GetMask("ReceiverSensor")) >= 1)
         {
             _beforeLaserReceiver = _currentLaserReceiver;
-            _currentLaserReceiver = hit.transform.gameObject.GetComponentInParent<LaserReceiver>();
+            _currentLaserReceiver = hits[0].transform.gameObject.GetComponentInParent<LaserReceiver>();
         }
         else
         {
