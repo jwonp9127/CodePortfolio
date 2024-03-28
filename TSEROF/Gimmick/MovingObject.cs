@@ -19,12 +19,12 @@ public class MovingObject : MonoBehaviour
     
     private bool _canMove;
 
-    public void Start()
+    private void Start()
     {
         SetTargetWaypoint();
     }
 
-    public void FixedUpdate()
+    private void Update()
     {
         if (!_isCollisionMoving || _canMove)
         {
@@ -41,7 +41,7 @@ public class MovingObject : MonoBehaviour
         
         // waypoint 사이을 보간하여 이동
         transform.position = Vector3.Lerp(_currentWaypoint.position, _targetWaypoint.position, elapsedPercentage);
-        transform.rotation = Quaternion.Lerp(_currentWaypoint.rotation, _targetWaypoint.rotation, elapsedPercentage);
+        transform.rotation = Quaternion.Slerp(_currentWaypoint.rotation, _targetWaypoint.rotation, elapsedPercentage);
         
         if (elapsedPercentage >= 1)
         {
@@ -70,25 +70,20 @@ public class MovingObject : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        Transform playerTransform = collision.gameObject.transform;
-        if (playerTransform == null)
+        if (collision.gameObject.CompareTag(Globals.PlayerTag))
         {
-            return;
+            collision.transform.SetParent(transform);
+            _canMove = true;
         }
-        playerTransform.SetParent(transform);
-        _canMove = true;
     }
 
     
     private void OnCollisionExit(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag(Globals.PlayerTag))
         {
-            return;
+            collision.transform.SetParent(null);
+            _canMove = false;
         }
-
-        collision.gameObject.transform.SetParent(null);
-        _canMove = false;
     }
-
 }

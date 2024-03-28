@@ -3,27 +3,18 @@ using UnityEngine.InputSystem;
 
 public class Leaf : MonoBehaviour
 {
+    [SerializeField] private GameObject icon;
+    
     private Player _player;
-    private bool _playerIsOnRide;
-    private GameObject _interactionIcon;
-    private Transform _playerTransform;
-    
-    private void Awake()
-    {
-        _interactionIcon = transform.GetChild(2).gameObject;
-    }
-    
+    private bool _isOnRide;
+    private float _speedMultiplier_f = 1.7f;
+
     private void OnTriggerEnter(Collider other)
     {
-        _interactionIcon.SetActive(true);
-        if (_playerIsOnRide)
-        {
-            return;
-        }
-        
+        icon.SetActive(true);
         _player = other.GetComponent<Player>();
         
-        if (_player == null)
+        if (_isOnRide || _player == null)
         {
             return;
         }
@@ -33,15 +24,10 @@ public class Leaf : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        _interactionIcon.SetActive(false);
-        if (_playerIsOnRide)
-        {
-            return;
-        }
-        
+        icon.SetActive(false);
         _player = other.GetComponent<Player>();
         
-        if (_player == null)
+        if (_isOnRide || _player == null)
         {
             return;
         }
@@ -51,26 +37,16 @@ public class Leaf : MonoBehaviour
     
     private void CheckOnRideStarted(InputAction.CallbackContext obj)
     {
-        if (_playerIsOnRide)
+        if (!_isOnRide)
         {
-            return;
-        }
-        SetPlayerOnRide();
-    }
-    
-    private void SetPlayerOnRide()
-    {
-        if (_playerTransform == null)
-        {
-            return;
-        }
+            _isOnRide = true;
+            _player.transform.position = transform.position;
+            _player.transform.rotation = transform.rotation;
+            _player.movementSpeed *= _speedMultiplier_f;
+            transform.SetParent(_player.transform);
         
-        _playerIsOnRide = true;
-        _playerTransform = _player.transform;
-        _playerTransform.position = transform.position;
-        _playerTransform.rotation = transform.rotation;
-        _player.movementSpeed *= 1.7f;
-        Stage2Manager.instance.isStage2Clear = true;
-        transform.SetParent(_playerTransform);
+            // Section Change
+            Stage2Manager.Instance.SetSection(2);
+        }
     }
 }

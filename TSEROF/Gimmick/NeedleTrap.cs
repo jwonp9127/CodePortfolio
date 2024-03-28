@@ -4,41 +4,53 @@ using Random = UnityEngine.Random;
 
 public class NeedleTrap : MonoBehaviour
 {
-    [Header("Object")]
-    [SerializeField] private Player player;
-    
-    [Header("Position Setting")]
-    [SerializeField] private bool isMove = false;
-    [SerializeField] private Vector3 idlePosition = new Vector3(0, -1f, 0);
-    [SerializeField] private Vector3 outPosition = Vector3.zero;
-    [SerializeField] private float emergeSpeed = 8;
-    [SerializeField] private float retractSpeed = 1;
-    [SerializeField] private Vector2 idleTimeRange = new Vector2(2f, 3f);
+    [Header("Option")]
+    [SerializeField] private bool _isMove;
+    [SerializeField] private float _speedMultiplier_f;
+    [SerializeField] private Vector2 _idleTimeRange;
+    [SerializeField] private Vector3 _needlePower;
 
-    [Header("Power Setting")]
-    [SerializeField] private Vector3 needlePower = new Vector3(-3, 10, 0);
-    [SerializeField] [Range(0, 20f)] private float needleDrag = 0.5f;
-    
-    private Vector3 _needlePosition;
-    private int _state;
-    private float _idleTime;
-    
+    private const int IdleState = 0;
+    private const int EmergeState = 1;
+    private const int RetractState = 2;
+
+    private Transform _needleTransform;
+    private Vector3 _idlePosition;
+    private Vector3 _outPosition;
+    private float _emergeSpeed;
+    private float _retractSpeed;
+    private float _idleDuration;
+
+    // wait for idleDuration 캐싱
+    private WaitForSeconds _idleWait;
+
     private void Start()
     {
-        idlePosition = idlePosition == Vector3.zero ? new Vector3(0, -1f, 0) : idlePosition;
-        outPosition = outPosition == Vector3.zero ? Vector3.zero : outPosition;
-        emergeSpeed = emergeSpeed == 0 ? 8 : emergeSpeed;
-        retractSpeed = retractSpeed == 0 ? 1 : retractSpeed;
-        idleTimeRange = idleTimeRange == Vector2.zero ? new Vector2(2f, 3f) : idleTimeRange;
-        
-        _state = 0;
-        _idleTime = Random.Range(idleTimeRange.x, idleTimeRange.y);
-        transform.GetChild(0).localPosition = isMove ? idlePosition : outPosition;
+        _needleTransform = transform.GetChild(0);
+        InitializeDefaults();
+        SetInitialState();
+
+        _idleWait = new WaitForSeconds(_idleDuration);
+    }
+
+    private void InitializeDefaults()
+    {
+        _idlePosition = new Vector3(0, -1f, 0);
+        _outPosition = Vector3.zero;
+        _emergeSpeed = 8 * _speedMultiplier_f;
+        _retractSpeed = 1 * _speedMultiplier_f;
+        _idleTimeRange = new Vector2(2f, 3f);
+    }
+
+    private void SetInitialState()
+    {
+        _idleDuration = Random.Range(_idleTimeRange.x, _idleTimeRange.y);
+        _needleTransform.localPosition = _isMove ? _idlePosition : _outPosition;
     }
 
     private void Update()
     {
-        if (isMove)
+        if (_isMove)
         {
             Move();
         }
@@ -46,46 +58,78 @@ public class NeedleTrap : MonoBehaviour
 
     private void Move()
     {
-        if (_state == 0)
+        if (IsInState(IdleState))
         {
             StartCoroutine(IdleCoroutine());
-            _state = 1;
+            SetState(EmergeState);
         }
-        
-        else if (_state == 2)
+        else if (IsInState(EmergeState))
         {
-            transform.GetChild(0).Translate(Vector3.up * (Time.deltaTime * emergeSpeed));
-            _needlePosition = transform.GetChild(0).localPosition;
-            
-            if (_needlePosition.y >= outPosition.y)
-            {
-                _state++;
-            }
+            EmergeNeedle();
         }
-        
-        else if (_state == 3)
+        else if (IsInState(RetractState))
         {
-            transform.GetChild(0).Translate(Vector3.down * (Time.deltaTime * retractSpeed));
-            _needlePosition = transform.GetChild(0).localPosition;
-            
-            if (_needlePosition.y <= idlePosition.y)
-            {
-                _state = 0;
-            }
+            RetractNeedle();
         }
     }
 
-    private IEnumerator IdleCoroutine()
+    // State 확인
+    private bool IsInState(int state)
     {
-        yield return new WaitForSeconds(_idleTime);
-        _state++;
+        if (state == IdleState)
+        {
+            return _needleTransform.localPosition.y <= _idlePosition.y;
+        }
+        else
+        {
+            return _needleTransform.localPosition.y >= _outPosition.y;
+        }
     }
     
+    private void EmergeNeedle()
+    {
+        _needleTransform.Translate(Vector3.up * (Time.deltaTime * _emergeSpeed));
+
+        if (IsInState(RetractState))
+        {
+            SetState(RetractState);
+        }
+    }
+    
+    private void RetractNeedle()
+    {
+        _needleTransform.Translate(Vector3.down * (Time.deltaTime * _retractSpeed));
+
+        if (IsInState(IdleState))
+        {
+            SetState(IdleState);
+        }
+    }
+
+    // Idle State에서 대기
+    private IEnumerator IdleCoroutine()
+    {
+        yield return _idleWait;
+        SetState(EmergeState);
+    }
+
+    // State 변경
+    private void SetState(int state)
+    {
+        Vector3 targetPosition = state == EmergeState ? _outPosition : _idlePosition;
+        _needleTransform.localPosition = targetPosition;
+    }
+
+    // Player에게 힘을 가함
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        Rigidbody rb = other.GetComponent<Rigidbody>();
+        
+        if (rb == null)
         {
-            player.ForceReceiver.AddVelocity(needlePower, needleDrag);
+            return;
         }
+        
+        rb.AddForce(_needlePower, ForceMode.Impulse);
     }
 }

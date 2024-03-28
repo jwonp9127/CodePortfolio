@@ -4,6 +4,8 @@ public class WaypointPath : MonoBehaviour
 {
     private int _waypointCount;
     private Transform[] _waypoints;
+
+    private const string ErrorWaypointLoad = "Waypoint Load Error";
     
     private void Start()
     {
@@ -23,10 +25,11 @@ public class WaypointPath : MonoBehaviour
 
         if (_waypointCount == 0)
         {
-            Debug.LogError("Waypoint Load Error");
+            Debug.LogError(ErrorWaypointLoad);
         }
     }
-    
+
+    // 해당 인덱스의 Waypoint를 반환합니다.
     public Transform GetWaypoint(int waypointIndex)
     {
         if (waypointIndex >= 0 && waypointIndex < _waypointCount)
@@ -39,7 +42,20 @@ public class WaypointPath : MonoBehaviour
         }
     }
 
-    // 주어진 현재 index의 이전 waypoint를 반환합니다.
+    // 다음 Waypoint를 반환하고 현재 인덱스를 증가시킵니다.
+    public Transform GetNextWaypoint(ref int currentIndex)
+    {
+        currentIndex++;
+
+        if (currentIndex >= _waypointCount)
+        {
+            currentIndex = 0;
+        }
+
+        return _waypoints[currentIndex];
+    }
+
+    // 이전 Waypoint를 반환하고 현재 인덱스를 감소시킵니다.
     public Transform GetPreviousWaypoint(ref int currentIndex)
     {
         currentIndex--;
@@ -47,19 +63,6 @@ public class WaypointPath : MonoBehaviour
         if (currentIndex < 0)
         {
             currentIndex = _waypointCount - 1;
-        }
-
-        return _waypoints[currentIndex];
-    }
-    
-    // 주어진 현재 index의 다음 waypoint를 반환합니다.
-    public Transform GetNextWaypoint(ref int currentIndex)
-    {
-        currentIndex++;
-        
-        if (currentIndex >= _waypointCount)
-        {
-            currentIndex = 0;
         }
 
         return _waypoints[currentIndex];

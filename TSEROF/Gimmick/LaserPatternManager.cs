@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = System.Random;
@@ -8,12 +9,22 @@ public class LaserPatternManager : MonoBehaviour
     private const int LaserPairs = 2;
     
     private readonly int[,] _randomPair = new int[LaserCount, LaserPairs] { { 3, 10 }, { 0, 5 }, { 2, 7 }, { 4, 9 }, { 6, 11 }, { 1, 8 } };
+    private readonly Random _random = new Random();
+    
     private int[] _selectedLaser = new int[LaserCount];
     private Transform[] _laserTransform = new Transform[LaserCount];
-    public GameObject stage2ClearCutScene;
-    public int successCount;
+    private int _successCount;
     private bool _isCleared;
-    private readonly Random _random = new Random();
+    
+    [SerializeField] private GameObject _stage2ClearCutScene;
+    
+    private void Start()
+    {
+        _stage2ClearCutScene.SetActive(false);
+        GetLaserPair();
+        RandomSelect();
+        LaserPatternSetting();
+    }
 
     private void Update()
     {
@@ -22,23 +33,15 @@ public class LaserPatternManager : MonoBehaviour
             return;
         }
 
-        if (successCount == 6)
+        if (_successCount == LaserCount)
         {
             Clear();
         }
     }
-
-    private void Start()
-    {
-        stage2ClearCutScene.SetActive(false);
-        GetLaserPair();
-        RandomSelect();
-        LaserPatternSetting();
-    }
-
+    
     private void GetLaserPair()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < LaserCount; i++)
         {
             _laserTransform[i] = transform.GetChild(i);
             _laserTransform[i].gameObject.SetActive(true);
@@ -47,7 +50,7 @@ public class LaserPatternManager : MonoBehaviour
 
     private void RandomSelect()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < LaserCount; i++)
         {
             _selectedLaser[i] = _randomPair[i, _random.Next(LaserPairs)];
         }
@@ -65,11 +68,11 @@ public class LaserPatternManager : MonoBehaviour
 
     private void Clear()
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < LaserCount; i++)
         {
             _laserTransform[i].gameObject.SetActive(false);
         }
-        stage2ClearCutScene.SetActive(true);
+        _stage2ClearCutScene.SetActive(true);
         _isCleared = true;
     }
 }

@@ -19,5 +19,7 @@ public class TopViewPlayer : Player
     protected override void ReadMovementInput()
     {
         MovementInput = Input.PlayerActions.Movement.ReadValue<Vector2>();
+        
+        UpdateRunSFX();
     }
 }
