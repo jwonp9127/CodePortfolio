@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IDataContent
 {
-    int ID { get; set; }
-    string Name { get; set; }
+    int ID { get; }
+    string Name { get; }
 }

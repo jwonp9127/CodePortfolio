@@ -1,16 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Crop : IDataContent
 {
-    public int ID { get; set; }
-    public string Name { get; set; }
-    public int[] GrowthDays { get; set; }
-    public string[] VariationPrefabPaths { get; set; }
-    public string HarvestPrefabPath { get; set; }
-    public string HarvestQuantity { get; set; }
+    public int ID { get; private set; }
+    public string Name { get; private set; }
+    public int[] GrowthDays { get; private set; }
+    public string[] VariationPrefabPaths { get; private set; }
+    public string HarvestPrefabPath { get; private set; }
+    public string HarvestQuantity { get; private set; }
 
     public Crop()
     {

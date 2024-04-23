@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class NPC : IDataContent
 {
-    public int ID { get; set; }
-    public string Name { get; set; }
-    public NPCType NPCType { get; set; }
-    public string PrefabPath { get; set; }
-    public Dictionary<Ability, float> Ability { get; set; }
+    public int ID { get; private set; }
+    public string Name { get; private set; }
+    public NPCType NPCType { get; private set; }
+    public string PrefabPath { get; private set; }
+    public Dictionary<Ability, float> Ability { get; private set; }
 
     public NPC()
     {

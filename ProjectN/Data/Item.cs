@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Item : IDataContent
 {
-    public int ID { get; set; }
+    public int ID { get; private set; }
     public ItemType ItemType { get; private set; }
-    public string Name { get; set; }
+    public string Name { get; private set; }
     public string Description { get; private set; }
     public string UIImagePath { get; private set; }
     public string PrefabPath { get; private set; }
