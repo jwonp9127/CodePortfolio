@@ -1,108 +1,103 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Test : MonoBehaviour
 {
+    private Dictionary<Type, PropertyInfo[]> _typeProperties = new Dictionary<Type, PropertyInfo[]>();
+    
     private void Start()
     {
-        // PrintItemLog<Item>("이름1");
-        // PrintAbility("이름1", Ability.AttackPower);
-        // PrintAbility("이름1", Ability.SP);
-        // PrintCropLog<Crop>("농작물1");
-        PrintNPCLog(1);
-        PrintNPCLog(2);
+        PrintInfoAll<Item>(Category.Item);
+        // PrintInfoAll<Crop>(Category.Crop);
+        // PrintInfoAll<NPC>(Category.NPC);
     }
-
-    private void PrintItemLog<T>(int id) where T : class, IDataContent, new()
+    
+    private void PrintInfo<T>(int id) where T : class, IDataContent, new()
     {
-        Item item = DataManager.Instance.GetData<Item>(id);
-
-        if (item == null)
+        T data = DataManager.Instance.GetData<T>(id);
+        
+        if (data == null)
         {
-            Debug.LogError("");
+            Debug.LogError($"해당하는 id의 {typeof(T)} 없음");
             return;
         }
+
+        PrintLog(data);
+    }
+    
+    private void PrintInfoAll<T>(Category category) where T : class, IDataContent, new()
+    {
+        Debug.Log($"[{category}]");
+        Debug.Log("------------------------------------");
+        var count = 0;
         
-        Debug.Log("id : " + item.ID);
-        Debug.Log("name : " + item.Name);
-        Debug.Log("Description : " + item.Description);
-        Debug.Log("prefabPath : " + item.PrefabPath);
-        Debug.Log("UIImagePath : " + item.UIImagePath);
-        Debug.Log("ItemType : " + item.ItemType);
-        Debug.Log("Price : " + item.Price);
-        for (int i = 0; i < System.Enum.GetValues(typeof(Ability)).Length; i++)
+        for (int id = 0; id < 1000; id++)
         {
-            if (item.Ability.TryGetValue((Ability)i, out var value))
+            T data = DataManager.Instance.GetData<T>(id + (int)category);
+
+            if (data == null)
             {
-                Debug.Log("Ability" + (Ability)i + " : " + value);
+                continue;
+            }
+            count++;
+            PrintLog(data);
+            Debug.Log("------------------------");
+        }
+        Debug.Log($"Total {typeof(T)} : {count}");
+        Debug.Log("------------------------------------");
+    }
+
+    private void PrintLog<T>(T data) where T : IDataContent, new()
+    {
+        PropertyInfo[] properties = GetTypeProperties<T>();
+        
+        foreach (var propertyInfo in properties)
+        {
+            var propertyType = propertyInfo.PropertyType;
+            var propertyValue = propertyInfo.GetValue(data);
+
+            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                Debug.Log($"{propertyInfo.Name} :");
+                var dictionary = (IDictionary)propertyValue;
+                foreach (DictionaryEntry kvp in dictionary)
+                {
+                    Debug.Log($"- {kvp.Key} : {kvp.Value}");
+                }
+            }
+            else if (propertyType.IsArray)
+            {
+                Debug.Log($"{propertyInfo.Name} :");
+                var array = (Array)propertyValue;
+                foreach (var item in array)
+                {
+                    Debug.Log($"- {item}");
+                }
             }
             else
             {
-                Debug.Log("Ability" + (Ability)i + "는 없음");
-            }
-        }
-    }
-
-    private void PrintAbility(int id, Ability abilityName)
-    {
-        Item item = DataManager.Instance.GetData<Item>(id);
-
-        if (item.GetAbility(abilityName, out float value))
-        {
-            Debug.Log(abilityName + " : " + value);
-        }
-        else
-        {
-            Debug.Log(abilityName+"은(는) 없음");
-        }
-    }
-    
-    private void PrintCropLog<T>(int id)
-    {
-        Crop cropData = DataManager.Instance.GetData<Crop>(id);
-
-        if (cropData == null)
-        {
-            Debug.LogError("");
-            return;
-        }
-        
-        Debug.Log("id : " + cropData.ID);
-        Debug.Log("name : " + cropData.Name);
-        Debug.Log("HarvestPrefabPath : " + cropData.HarvestPrefabPath);
-        Debug.Log("HarvestQuantity : " + cropData.HarvestQuantity);
-        
-        for (int i = 0; i < cropData.GrowthDays.Length; i++)
-        { 
-            Debug.Log($"Growth {i+1} + (Day {cropData.GrowthDays[i]} ~ ) : {cropData.VariationPrefabPaths[i]}");
-        }
-    }
-    
-    private void PrintNPCLog(int id)
-    {
-        NonPlayerCharacter NPC = DataManager.Instance.GetData<NonPlayerCharacter>(id);
-
-        if (NPC == null)
-        {
-            Debug.LogError("");
-            return;
-        }
-        
-        Debug.Log("id : " + NPC.ID);
-        Debug.Log("name : " + NPC.Name);
-        Debug.Log("CharacterType : " + NPC.CharacterType);
-        Debug.Log("PrefabPath : " + NPC.PrefabPath);
-        for (int i = 0; i < System.Enum.GetValues(typeof(Ability)).Length; i++)
-        {
-            if (NPC.Ability.TryGetValue((Ability)i, out var value))
-            {
-                Debug.Log("Ability" + (Ability)i + " : " + value);
-            }
-            else
-            {
-                Debug.Log("Ability" + (Ability)i + "는 없음");
+                Debug.Log($"{propertyInfo.Name} : {propertyValue}");
             }
         }
     }
     
+    private PropertyInfo[] GetTypeProperties<T>() where T : IDataContent, new()
+    {
+        Type type = typeof(T);
+
+        if (_typeProperties.TryGetValue(type, out var typeProperties))
+        {
+            return typeProperties;
+        }
+
+        PropertyInfo[] properties = type.GetProperties();
+        _typeProperties[type] = properties;
+
+        return properties;
+    }
+
 }
