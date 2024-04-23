@@ -221,23 +221,24 @@ public class DataReader
         // Dictionary 인스턴스 생성
         Type dictionaryType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
         object dictionary = Activator.CreateInstance(dictionaryType);
-
-        int iterations = int.Parse(values[index]);
-
-        for (int i = 0; i < iterations; i++)
+        
+        int keyCount = Enum.GetNames(keyType).Length;
+        
+        for (int i = 0; i < keyCount; i++)
         {
-            index++;
-            
             if (String.IsNullOrEmpty(values[index]))
             {
+                index++;
                 continue;
             }
 
             object key = ConvertType(_header[index], keyType);
-            object value = ConvertType(values[index], valueType);
+            object value = ConvertType(values[index++], valueType);
 
             ((IDictionary)dictionary).Add(key, value);
         }
+
+        index--;
         return dictionary;
     }
 
