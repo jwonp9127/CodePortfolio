@@ -48,7 +48,7 @@ public class DataManager : MonoBehaviour
     {
         LoadData<Item>("ItemData.csv");
         LoadData<Crop>("CropData.csv");
-        LoadData<NonPlayerCharacter>("NPCData.csv");
+        LoadData<NPC>("NPCData.csv");
     }
 
     // 특정 유형의 데이터 로드 함수

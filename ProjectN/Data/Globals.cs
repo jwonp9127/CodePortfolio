@@ -15,8 +15,15 @@ public enum Ability
     MaxGaugeTime
 }
 
-public enum CharacterType
+public enum NPCType
 {
     Monster,
-    NPC
+    Villager
+}
+
+public enum Category
+{
+    NPC = 0,
+    Crop = 1000,
+    Item = 2000
 }

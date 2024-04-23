@@ -2,26 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NonPlayerCharacter : IDataContent
+public class NPC : IDataContent
 {
     public int ID { get; set; }
     public string Name { get; set; }
-    public CharacterType CharacterType { get; set; }
+    public NPCType NPCType { get; set; }
     public string PrefabPath { get; set; }
     public Dictionary<Ability, float> Ability { get; set; }
 
-    public NonPlayerCharacter()
+    public NPC()
     {
         Ability = new Dictionary<Ability, float>();
     }
 
-    public NonPlayerCharacter(NonPlayerCharacter nonPlayerCharacter)
+    public NPC(NPC npc)
     {
-        ID = nonPlayerCharacter.ID;
-        Name = nonPlayerCharacter.Name;
-        CharacterType = nonPlayerCharacter.CharacterType;
-        PrefabPath = nonPlayerCharacter.PrefabPath;
-        Ability = new Dictionary<Ability, float>(nonPlayerCharacter.Ability);
+        ID = npc.ID;
+        Name = npc.Name;
+        NPCType = npc.NPCType;
+        PrefabPath = npc.PrefabPath;
+        Ability = new Dictionary<Ability, float>(npc.Ability);
     }
 
     public bool GetAbility(Ability abilityType, out float abilityValue)

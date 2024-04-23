@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Crop : IDataContent
 {
-    public string Name { get; set; }
     public int ID { get; set; }
+    public string Name { get; set; }
     public int[] GrowthDays { get; set; }
     public string[] VariationPrefabPaths { get; set; }
     public string HarvestPrefabPath { get; set; }
