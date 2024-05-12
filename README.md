@@ -6,7 +6,7 @@
 ||[DataReader](https://github.com/jwonp9127/CodePortfolio/blob/main/ProjectN/Data/DataReader.cs)|
 |TSEROF|[Leaf](https://github.com/jwonp9127/CodePortfolio/blob/main/TSEROF/Gimmick/Leaf.cs)|
 ||[WaypointPath](https://github.com/jwonp9127/CodePortfolio/blob/main/TSEROF/Gimmick/WaypointPath.cs)|
-||[MobingObject](https://github.com/jwonp9127/CodePortfolio/blob/main/TSEROF/Gimmick/MobingObject.cs)|
+||[MovingObject](https://github.com/jwonp9127/CodePortfolio/blob/main/TSEROF/Gimmick/MovingObject.cs)|
 
 ## ProjectN
 
