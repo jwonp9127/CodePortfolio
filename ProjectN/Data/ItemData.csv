@@ -1,0 +1,32 @@
+﻿ID(2000~2999),ItemType,Name,Description,UIImagePath,PrefabPath,AttackSpeed,AttackPower,MaxGaugeTime,HP,SP,MoveSpeed,Price
+2021,Material,herb,마법의 재료로 사용되는 약초입니다.,herb_image,herb_prefab,,,,,,,10
+2031,Consumable,health_potion,소비 시 체력을 회복합니다.,health_potion_image,health_potion_prefab,,,,10,,,10
+2043,Consumable,stamina_potion,소비 시 스태미너를 회복합니다.,stamina_potion_image,stamina_potion_prefab,,,,,100,,20
+2048,Equipment,reinforced_armor,강화된 갑옷으로 방어력이 높아집니다.,reinforced_armor_image,reinforced_armor_prefab,,50,20,100,,,150
+2049,Material,magic_crystal,마법을 담은 수정으로 강화재료로 사용됩니다.,magic_crystal_image,magic_crystal_prefab,,,,,,,20
+2095,Equipment,armor,모험가를 보호하는 방어구입니다.,armor_image,armor_prefab,,30,10,50,,,120
+2148,Material,spellbook,마법을 배우는 데 사용되는 특별한 책입니다.,spellbook_image,spellbook_prefab,,,,,,,20
+2166,Material,leather,갑옷 제작에 사용되는 유연한 재료입니다.,leather_image,leather_prefab,,,,,,,8
+2172,Equipment,bow,숙련된 궁수를 위한 원거리 무기입니다.,bow_image,bow_prefab,15,15,,,,,70
+2184,Consumable,fire_potion,소비 시 화염 공격을 발사합니다.,fire_potion_image,fire_potion_prefab,30,30,60,,,,40
+2205,Consumable,enchantment_potion,소비 시 장비를 강화합니다.,enchantment_potion_image,enchantment_potion_prefab,,,,,,,25
+2214,Equipment,spear,원거리 공격에 효과적인 창입니다.,spear_image,spear_prefab,8,18,,,,,80
+2229,Material,mystic_flower,마법의 힘을 지니는 신비한 꽃입니다.,mystic_flower_image,mystic_flower_prefab,,,,,,,15
+2236,Material,magic_stone,마법의 힘을 담은 보석입니다.,magic_stone_image,magic_stone_prefab,,,,,,,15
+2323,Consumable,poison_potion,소비 시 독을 적에게 적용시킵니다.,poison_potion_image,poison_potion_prefab,5,10,60,,,,30
+2329,Consumable,mana_potion,소비 시 마나를 회복합니다.,mana_potion_image,mana_potion_prefab,,,,,50,,15
+2346,Consumable,haste_potion,소비 시 이동 속도를 증가시킵니다.,haste_potion_image,haste_potion_prefab,,,,,,10,30
+2429,Equipment,mace,무거운 둔기로 강력한 공격을 합니다.,mace_image,mace_prefab,3,30,,,,,110
+2431,Equipment,sword,용감한 모험가를 위한 강력한 검입니다.,sword_image,sword_prefab,10,20,5,,,,50
+2463,Consumable,invisibility_potion,소비 시 일정 시간 동안 투명 상태가 됩니다.,invisibility_potion_image,invisibility_potion_prefab,,,,,,,45
+2478,Equipment,staff,강력한 주문을 시전하는 마법 지팡이입니다.,staff_image,staff_prefab,5,25,30,,,,90
+2493,Equipment,greatsword,거대한 대검으로 강력한 공격을 합니다.,greatsword_image,greatsword_prefab,5,25,,,,,100
+2622,Equipment,cloak,마법 사용자를 위한 마법 방어구입니다.,cloak_image,cloak_prefab,,10,,20,50,,80
+2646,Equipment,shield,공격을 방어하고 보호하는 방패입니다.,shield_image,shield_prefab,,15,,30,,,70
+2673,Equipment,magic_staff,마법 사용자를 위한 마법 지팡이입니다.,magic_staff_image,magic_staff_prefab,10,20,,,,,90
+2764,Material,dragon_scale,용의 강력한 비늘로 강화재료로 사용됩니다.,dragon_scale_image,dragon_scale_prefab,,,,,,,25
+2804,Consumable,healing_scroll,소비 시 주변 아군의 체력을 회복합니다.,healing_scroll_image,healing_scroll_prefab,,,,,,,35
+2886,Material,gemstone,마법부여에 사용되는 귀중한 보석입니다.,gemstone_image,gemstone_prefab,,,,,,,12
+2891,Consumable,vitality_potion,소비 시 체력과 마나를 회복합니다.,vitality_potion_image,vitality_potion_prefab,,,,50,50,,35
+2941,Material,magic_powder,마법의 힘을 지닌 가루로 강화재료로 사용됩니다.,magic_powder_image,magic_powder_prefab,,,,,,,25
+2987,Material,iron_ingot,제작에 사용되는 기본 재료 중 하나입니다.,iron_ingot_image,iron_ingot_prefab,,,,,,,5
